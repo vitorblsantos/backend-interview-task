@@ -52,7 +52,7 @@ Nesta tarefa, o candidato deverá configurar um projeto backend utilizando Node.
 - Flow no Postman com testes aplicados
 - Env com variáveis de ambiente encriptadas
 - Aplicação funcional com link na AWS
-- Padrões de desenvolvimento aplicados (Cammel Case, Snake Case, linter, etc)
+- Padrões de desenvolvimento aplicados (Camel Case, Snake Case, linter, etc)
 
 ## Referências
 
