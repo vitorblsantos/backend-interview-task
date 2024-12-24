@@ -2,8 +2,8 @@ import Router from '@koa/router'
 
 import { StatusRouter } from './status/status.router'
 
-const router = new Router()
+const Routers = new Router()
 
-router.use(StatusRouter.routes())
+Routers.use(StatusRouter.routes())
 
-export default router
+export { Routers }

@@ -1,18 +1,17 @@
+import 'dotenv/config'
+
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import cors from '@koa/cors'
 import helmet from 'koa-helmet'
 
-import Routers from './routers/index.routers'
+import { Environment } from './config/index.config'
+import { Routers } from './routers/index.routers'
 
 const app = new Koa()
 
-app.use(
-  helmet({
-    contentSecurityPolicy: false
-  })
-)
-
+app.use(Routers.routes()).use(Routers.allowedMethods())
+app.use(bodyParser())
 app.use(
   cors({
     origin: '*',
@@ -20,9 +19,10 @@ app.use(
     allowHeaders: ['Content-Type', 'Authorization']
   })
 )
+app.use(
+  helmet({
+    contentSecurityPolicy: false
+  })
+)
 
-app.use(Routers.routes()).use(Routers.allowedMethods())
-
-app.use(bodyParser())
-
-app.listen(8080, () => console.log('Api serving on port: 8080'))
+app.listen(Environment.APP_PORT, () => console.log(`API alive - PORT: ${Environment.APP_PORT}`))
