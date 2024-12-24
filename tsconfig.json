@@ -1,0 +1,30 @@
+
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": false,
+    "incremental": true,
+    "module": "ESNext",
+    "noFallthroughCasesInSwitch": false,
+    "noImplicitAny": false,
+    "outDir": "./dist",
+    "removeComments": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "strictBindCallApply": false,
+    "strictNullChecks": true,
+    "target": "ES2022",
+    "inlineSources": true,
+    "sourceRoot": "/"
+  },
+  "include": [
+    "app/**/*"
+  ],
+  "ts-node": {
+    "swc": true
+  }
+}
