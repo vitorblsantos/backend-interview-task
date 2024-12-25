@@ -48,12 +48,15 @@
       "alias": {
         "extensions": [".js", ".ts"],
         "map": [
-          ["@", "./src/"],
-          ["@/config", "./src/config"],
-          ["@/controllers", "./src/controllers"],
-          ["@/modules", "./src/modules"],
-          ["@/repositories", "./src/repositories"],
-          ["@/services", "./src/services"]
+          ["@/*", "./app/"],
+          ["@/config/*", "./app/config/*"],
+          ["@/controllers/*", "./app/controllers/*"],
+          ["@/entities/*", "./app/entities/*"],
+          ["@/interfaces/*", "./app/interfaces/*"],
+          ["@/middlewares/*", "./app/middlewares/*"],
+          ["@/repositories/*", "./app/repositories/*"],
+          ["@/routers/*", "./app/routers/*"],
+          ["@/services/*", "./app/services/*"]
         ]
       }
     }

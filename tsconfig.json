@@ -1,17 +1,30 @@
-
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": false,
+    "esModuleInterop": true,
     "incremental": true,
-    "module": "ESNext",
+    "module": "commonjs",
     "noFallthroughCasesInSwitch": false,
     "noImplicitAny": false,
     "outDir": "./dist",
+
+    "paths": {
+      "@/*": ["./app/*"],
+      "@/config/*": ["./app/config/*"],
+      "@/controllers/*": ["./app/controllers/*"],
+      "@/entities/*": ["./app/entities/*"],
+      "@/interfaces/*": ["./app/interfaces/*"],
+      "@/middlewares*": ["./app/middlewares/*"],
+      "@/repositories*": ["./app/repositories/*"],
+      "@/middlewares/*": ["./app/middlewares/*"],
+      "@/routers/*": ["./app/routers/*"],
+      "@/services/*": ["./app/services/*"]
+    },
+
     "removeComments": true,
     "sourceMap": true,
     "skipLibCheck": true,
@@ -19,12 +32,9 @@
     "strictNullChecks": true,
     "target": "ES2022",
     "inlineSources": true,
-    "sourceRoot": "/",
-    "moduleResolution":"node"
+    "sourceRoot": "/"
   },
-  "include": [
-    "app/**/*"
-  ],
+  "include": ["app/**/*"],
   "ts-node": {
     "swc": true
   }

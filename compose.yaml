@@ -1,0 +1,49 @@
+networks:
+  caveo-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
+
+services:
+  cognito:
+    image: jagregory/cognito-local:latest
+    container_name: cognito-local
+    networks:
+      - caveo-network
+    ports:
+      - "9229:9229"
+    restart: on-failure
+
+  postgres:
+    image: postgres:17.1-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: caveo-database
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: toor
+    ports:
+      - "5432:5432"
+    networks:
+      - caveo-network
+
+  caveo-bff:
+    build:
+      args:
+        NODE_ENV: "development"
+      context: .
+      dockerfile: Dockerfile
+    container_name: caveo-bff
+    environment:
+      APP_PORT: 8080
+      NODE_ENV: development
+      POSTGRES_DB: caveo-database
+      POSTGRES_HOST: postgres
+      POSTGRES_PASSWORD: toor
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: root
+    image: caveo-bff:latest
+    networks:
+      - caveo-network
+    ports:
+      - "8080:8080"
+    restart: on-failure
