@@ -11,6 +11,23 @@ export class ControllerUsers {
     this.serviceUser = new ServiceUsers()
   }
 
+  async delete(ctx: Context): Promise<void> {
+    const body = ctx.request.body as { user: EntityUsers['id'] }
+
+    if (!body || !body.user) ctx.throw(400, 'Provide body.user')
+
+    try {
+      const user = await this.serviceUser.get(body.user)
+
+      if (!user) ctx.throw(404, `User ${user} not found`)
+      ctx.body = await this.serviceUser.delete(user.id)
+      ctx.status = 200
+      return
+    } catch (error) {
+      ctx.throw(500, 'Internal Server Error')
+    }
+  }
+
   async fetch(ctx: Context): Promise<void> {
     try {
       const users = await this.serviceUser.fetch()
@@ -44,14 +61,43 @@ export class ControllerUsers {
   }
 
   async post(ctx: Context): Promise<void> {
-    const userData = ctx.request.body as { email: EntityUsers['email']; name: EntityUsers['name'] } | null
+    const body = ctx.request.body as { email: EntityUsers['email']; name: EntityUsers['name'] }
 
-    if (!userData || !userData.email || !userData.name) ctx.throw(400, 'Please, provide userData')
+    if (!body || !body.email || !body.name) ctx.throw(400, 'Provide body.email and body.name')
 
     try {
+      const alreadyExists = await this.serviceUser.get(body.email)
+
+      if (alreadyExists) ctx.throw(406, 'User already exists')
+
       ctx.body = await this.serviceUser.post({
-        email: userData.email,
-        name: userData.name
+        email: body.email,
+        name: body.name
+      })
+      ctx.status = 200
+      return
+    } catch (err) {
+      ctx.throw(500, err)
+    }
+  }
+
+  async put(ctx: Context): Promise<void> {
+    const body = ctx.request.body as {
+      name: EntityUsers['name']
+      role: EntityUsers['role']
+      user: EntityUsers['id']
+    }
+
+    if (!body || (!body.name && !body.role)) ctx.throw(400, 'Invalid payload')
+
+    try {
+      const user = await this.serviceUser.get(body.user)
+
+      if (!user) ctx.throw(404, 'User not found')
+
+      ctx.body = await this.serviceUser.put(user.id, {
+        name: body.name,
+        role: body.role
       })
       ctx.status = 200
       return

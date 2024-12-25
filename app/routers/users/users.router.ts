@@ -6,6 +6,10 @@ const router = new Router({
   prefix: '/users'
 })
 
+router.delete('/', async ctx => {
+  await controller.delete(ctx)
+})
+
 router.get('/:email', async ctx => {
   await controller.get(ctx)
 })
@@ -16,6 +20,10 @@ router.get('/', async ctx => {
 
 router.post('/', async ctx => {
   await controller.post(ctx)
+})
+
+router.put('/', async ctx => {
+  await controller.put(ctx)
 })
 
 export const UsersRouter = router

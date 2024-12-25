@@ -22,7 +22,8 @@
       "@/repositories*": ["./app/repositories/*"],
       "@/middlewares/*": ["./app/middlewares/*"],
       "@/routers/*": ["./app/routers/*"],
-      "@/services/*": ["./app/services/*"]
+      "@/services/*": ["./app/services/*"],
+      "@/utils/*": ["./app/utils/*"]
     },
 
     "removeComments": true,

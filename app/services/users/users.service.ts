@@ -5,12 +5,27 @@ import { RepositoryUsers } from '@/repositories/index.repositories'
 export class ServiceUsers implements IServiceUsers {
   private readonly repositoryUsers = new RepositoryUsers()
 
-  async get(email: string): Promise<EntityUsers | null> {
-    return await this.repositoryUsers.get(email)
+  async delete(reference: EntityUsers['id']): Promise<string> {
+    return await this.repositoryUsers.delete(reference)
+  }
+
+  async get(id: EntityUsers['id']): Promise<EntityUsers | null> {
+    return await this.repositoryUsers.get(id)
+  }
+
+  async getByEmail(email: EntityUsers['email']): Promise<EntityUsers | null> {
+    return await this.repositoryUsers.getByEmail(email)
   }
 
   async fetch(): Promise<EntityUsers[] | null> {
     return await this.repositoryUsers.fetch()
+  }
+
+  async put(
+    reference: EntityUsers['id'],
+    data: { email: EntityUsers['email']; name: EntityUsers['name']; role: EntityUsers['role'] }
+  ): Promise<string> {
+    return await this.repositoryUsers.put(reference, data)
   }
 
   async post(data: EntityUsers): Promise<string> {

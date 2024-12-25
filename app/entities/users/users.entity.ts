@@ -11,6 +11,11 @@ export class EntityUsers extends BaseEntity {
   @Column()
   email!: string
 
+  @Column({
+    default: false
+  })
+  isOnboarded!: boolean
+
   @Column()
   name!: string
 
@@ -29,13 +34,13 @@ export class EntityUsers extends BaseEntity {
   status!: EUserStatus
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at!: Date
+  createdAt!: Date
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  deleted_at!: Date
+  deletedAt!: Date
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  updated_at!: Date
+  updatedAt!: Date
 
   @BeforeInsert()
   generateId() {

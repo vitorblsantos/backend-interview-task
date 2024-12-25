@@ -11,7 +11,9 @@ export enum EUserStatus {
 }
 
 export interface IServiceUsers {
-  get(email: string): Promise<EntityUsers | null>
-  post(data: { email: EntityUsers['email']; name: EntityUsers['name'] }): Promise<string>
+  delete(reference: EntityUsers['id']): Promise<string>
   fetch(): Promise<EntityUsers[] | null>
+  get(email: string): Promise<EntityUsers | null>
+  put(reference: EntityUsers['id'], data: { name: EntityUsers['name']; role: EntityUsers['role'] }): Promise<string>
+  post(data: { email: EntityUsers['email']; name: EntityUsers['name'] }): Promise<string>
 }

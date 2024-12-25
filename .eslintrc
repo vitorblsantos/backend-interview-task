@@ -56,7 +56,8 @@
           ["@/middlewares/*", "./app/middlewares/*"],
           ["@/repositories/*", "./app/repositories/*"],
           ["@/routers/*", "./app/routers/*"],
-          ["@/services/*", "./app/services/*"]
+          ["@/services/*", "./app/services/*"],
+          ["@/utils/*", "./app/utils/*"]
         ]
       }
     }
