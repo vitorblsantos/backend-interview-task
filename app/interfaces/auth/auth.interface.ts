@@ -9,7 +9,13 @@ export interface IServiceAuthLoginRequest {
   password: string
 }
 
-export type IServiceAuthLoginResponse = string
+export interface IServiceAuthLoginResponse {
+  AccessToken: string
+  ExpiresIn: number
+  IdToken: string
+  RefreshToken: string
+  TokenType: string
+}
 
 export interface IServiceAuth {
   login(payload: IServiceAuthLoginRequest): Promise<IServiceAuthLoginResponse>
