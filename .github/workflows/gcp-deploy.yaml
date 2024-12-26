@@ -36,7 +36,7 @@ jobs:
         run: docker compose push
 
       - name: Deploy Cloud Run
-        run: gcloud run deploy $SERVICE_NAME --image $IMAGE --project $PROJECT_ID --region $REGION --service-account=$SERVICE_ACCOUNT_EMAIL
+        run: gcloud run deploy $SERVICE_NAME --image $IMAGE --project $PROJECT_ID --region=$REGION --service-account=$SERVICE_ACCOUNT_EMAIL
         env:
           IMAGE: ${{ secrets.IMAGE }}
           PROJECT_ID: ${{ secrets.PROJECT_ID }}
