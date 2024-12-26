@@ -5,6 +5,24 @@ networks:
       com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
 
 services:
+  google-pub-sub:
+    image: messagebird/gcloud-pubsub-emulator:latest
+    container_name: pub-sub
+    environment:
+      PUBSUB_PROJECT1: "vitorblsantos"
+    ports:
+      - "8681:8681"
+    networks:
+      - caveo-network
+
+  pub-sub-ui:
+    image: ghcr.io/neoscript/pubsub-emulator-ui:latest
+    container_name: pub-sub-ui
+    ports:
+      - "7200:80"
+    networks:
+      - caveo-network
+
   postgres:
     image: postgres:17.1-alpine
     container_name: postgres

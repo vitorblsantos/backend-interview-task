@@ -48,6 +48,7 @@
       "alias": {
         "extensions": [".js", ".ts"],
         "map": [
+          ["@google-cloud/tasks", "./node_modules/@google-cloud/tasks"],
           ["@/*", "./app/"],
           ["@/config/*", "./app/config/*"],
           ["@/controllers/*", "./app/controllers/*"],

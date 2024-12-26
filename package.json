@@ -9,10 +9,12 @@
   "description": "backend-interview-task 2024",
   "dependencies": {
     "@babel/core": "^7.23.2",
+    "@google-cloud/tasks": "^5.5.2",
     "@koa/cors": "^5.0.0",
     "@koa/router": "^10.0.0",
     "@swc/core": "^1.7.36",
     "@swc/helpers": "^0.5.13",
+    "amazon-cognito-identity-js": "^6.3.12",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^16.4.7",
