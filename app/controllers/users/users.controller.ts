@@ -19,7 +19,10 @@ export class ControllerUsers {
     try {
       const user = await this.serviceUser.get(body.user)
 
-      if (!user) ctx.throw(404, `User ${body.user} not found`)
+      if (!user) {
+        ctx.throw(404, `User ${body.user} not found`)
+        return
+      }
 
       await this.serviceUser.delete(user.id)
       ctx.status = 204
