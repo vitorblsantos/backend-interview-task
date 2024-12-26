@@ -1,5 +1,3 @@
-\c "caveo-database";
-
 INSERT INTO "users"("id", "email", "isOnboarded", "name", "role", "status", "createdAt", "updatedAt")
 VALUES (
   'efe8365f-c86d-493d-9b6f-8a3881846b93',
