@@ -19,7 +19,7 @@ export class ControllerUsers {
     try {
       const user = await this.serviceUser.get(body.user)
 
-      if (!user) ctx.throw(404, `User ${user} not found`)
+      if (!user) ctx.throw(404, `User ${body.user} not found`)
 
       await this.serviceUser.delete(user.id)
       ctx.status = 204
@@ -42,11 +42,9 @@ export class ControllerUsers {
   }
 
   async get(ctx: Context): Promise<void> {
-    const email: string | undefined = ctx.params.email
+    const { email }: { email: string } = ctx.params
 
     if (!email) ctx.throw(400, 'Please, provide user email')
-
-    console.log(email)
 
     try {
       const user = await this.serviceUser.get(email)
@@ -95,7 +93,10 @@ export class ControllerUsers {
     try {
       const snapshot = await this.serviceUser.get(user)
 
-      if (!snapshot) ctx.throw(404, 'User not found')
+      if (!snapshot) {
+        ctx.throw(404, 'User not found')
+        return
+      }
 
       await this.serviceUser.put(snapshot.id, body)
       ctx.status = 204
