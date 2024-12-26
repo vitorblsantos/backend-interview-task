@@ -24,6 +24,7 @@
     "npm": "^11.0.0",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
+    "tsc-alias": "^1.8.10",
     "typeorm": "^0.3.20",
     "uuid": "^11.0.3"
   },
@@ -62,7 +63,6 @@
     "source-map-support": "^0.5.21",
     "standard": "^17.1.0",
     "ts-node": "^10.9.1",
-    "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
   },
