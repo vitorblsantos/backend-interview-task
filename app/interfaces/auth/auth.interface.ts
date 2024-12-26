@@ -1,11 +1,16 @@
-import { Context, Next } from 'koa'
-
 export interface IAuthToken {
   sub: string
   email: string
   scope: string
 }
 
-export interface IMiddlewareAuth {
-  validateToken(ctx: Context & { token?: IAuthToken }, next: Next): Promise<void>
+export interface IServiceAuthLoginRequest {
+  username: string
+  password: string
+}
+
+export type IServiceAuthLoginResponse = string
+
+export interface IServiceAuth {
+  login(payload: IServiceAuthLoginRequest): Promise<IServiceAuthLoginResponse>
 }

@@ -1,8 +1,8 @@
 import { Context, Next } from 'koa'
-import { IAuthToken, ICognitoConfig, IMiddlewareAuth } from '@/interfaces/index.interfaces'
+import { IAuthToken, ICognitoConfig } from '@/interfaces/index.interfaces'
 import { CognitoAuth, Environment } from '@/config/index.config'
 
-export class MiddlewareAuth implements IMiddlewareAuth {
+export class MiddlewareAuth {
   async validateToken(ctx: Context & { token?: IAuthToken }, next: Next): Promise<void> {
     const authHeader = ctx.headers['authorization']
     if (!authHeader) ctx.throw(401, 'Authorization header missing')

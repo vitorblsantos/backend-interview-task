@@ -1,6 +1,6 @@
 import { Context } from 'koa'
 
-import { IServiceAuth } from '@/interfaces/index.interfaces'
+import { IServiceAuth, IServiceAuthLoginRequest } from '@/interfaces/index.interfaces'
 import { ServiceAuth } from '@/services/index.services'
 
 export class ControllerAuth {
@@ -11,7 +11,7 @@ export class ControllerAuth {
   }
 
   async login(ctx: Context): Promise<void> {
-    const body = ctx.request.body as { username: string; password: string }
+    const body = ctx.request.body as IServiceAuthLoginRequest
     if (!body || !body.username || !body.password) ctx.throw(400, 'Bad request')
 
     try {
