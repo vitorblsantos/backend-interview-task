@@ -11,6 +11,18 @@ const client = new CloudTasksClient({
 const location = 'southamerica-east1'
 const project = JSON.parse(Environment.SERVICE_ACCOUNT).project_id
 
+export const createTask = async (request: google.cloud.tasks.v2.ICreateTaskRequest) => {
+  return await client.createTask(request)
+}
+
+export const getQueue = async (name: string) => {
+  const [queue] = await client.getQueue({
+    name: client.queuePath(project, location, name)
+  })
+
+  return queue
+}
+
 export const createQueue = async (name: string) => {
   try {
     const [queue] = await client.createQueue({
@@ -30,16 +42,4 @@ export const createQueue = async (name: string) => {
 
     throw err
   }
-}
-
-export const createTask = async (request: google.cloud.tasks.v2.ICreateTaskRequest) => {
-  return await client.createTask(request)
-}
-
-export const getQueue = async (name: string) => {
-  const [queue] = await client.getQueue({
-    name: client.queuePath(project, location, name)
-  })
-
-  return queue
 }
