@@ -20,19 +20,19 @@ services:
   caveo-bff:
     build:
       args:
-        NODE_ENV: "development"
+        NODE_ENV: "production"
       context: .
       dockerfile: Dockerfile
     container_name: caveo-bff
     environment:
       APP_PORT: 8080
-      NODE_ENV: development
+      NODE_ENV: production
       POSTGRES_DB: caveo-database
       POSTGRES_HOST: postgres
       POSTGRES_PASSWORD: toor
       POSTGRES_PORT: 5432
       POSTGRES_USER: root
-    image: caveo-bff:latest
+    image: us.gcr.io/vitorblsantos/caveo-bff:latest
     networks:
       - caveo-network
     ports:

@@ -1,0 +1,45 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy-service:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: GCP Authentication
+        run: |
+          touch service-account-key.json
+          echo $SERVICE_ACCOUNT | base64 --decode > service-account-key.json
+          gcloud auth activate-service-account --key-file=service-account-key.json
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us.gcr.io
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
+
+      - name: Set Google Cloud Project
+        run: gcloud config set project $PROJECT_ID
+        env:
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+
+      - name: Build Image
+        run: docker compose build
+
+      - name: Push Image to Artifact Registry
+        run: docker compose push
+
+      - name: Deploy Cloud Run
+        run: gcloud run deploy $SERVICE_NAME --image $IMAGE --project $PROJECT_ID --region $REGION --service-account $SERVICE_ACCOUNT_EMAIL
+        env:
+          IMAGE: ${{ secrets.IMAGE }}
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          REGION: ${{ vars.REGION }}
+          SERVICE_ACCOUNT_EMAIL: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+          SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
