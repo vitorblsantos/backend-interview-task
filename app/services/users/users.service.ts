@@ -23,12 +23,17 @@ export class ServiceUsers implements IServiceUsers {
 
   async put(
     reference: EntityUsers['id'],
-    data: { email: EntityUsers['email']; name: EntityUsers['name']; role: EntityUsers['role'] }
+    data: {
+      isOnboarded: EntityUsers['isOnboarded']
+      email: EntityUsers['email']
+      name: EntityUsers['name']
+      role: EntityUsers['role']
+    }
   ): Promise<string> {
     return await this.repositoryUsers.put(reference, data)
   }
 
-  async post(data: EntityUsers): Promise<string> {
+  async post(data: EntityUsers): Promise<EntityUsers> {
     return await this.repositoryUsers.post(data)
   }
 }

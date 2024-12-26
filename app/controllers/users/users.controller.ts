@@ -20,8 +20,9 @@ export class ControllerUsers {
       const user = await this.serviceUser.get(body.user)
 
       if (!user) ctx.throw(404, `User ${user} not found`)
-      ctx.body = await this.serviceUser.delete(user.id)
-      ctx.status = 200
+
+      await this.serviceUser.delete(user.id)
+      ctx.status = 204
       return
     } catch (error) {
       ctx.throw(500, 'Internal Server Error')
@@ -74,7 +75,7 @@ export class ControllerUsers {
         email: body.email,
         name: body.name
       })
-      ctx.status = 200
+      ctx.status = 201
       return
     } catch (err) {
       ctx.throw(500, err)
@@ -82,24 +83,22 @@ export class ControllerUsers {
   }
 
   async put(ctx: Context): Promise<void> {
-    const body = ctx.request.body as {
+    const { user, ...body } = ctx.request.body as {
+      isOnboarded: EntityUsers['isOnboarded']
       name: EntityUsers['name']
       role: EntityUsers['role']
       user: EntityUsers['id']
     }
 
-    if (!body || (!body.name && !body.role)) ctx.throw(400, 'Invalid payload')
+    if (!body || (!body.isOnboarded && !body.name && !body.role)) ctx.throw(400, 'Invalid payload')
 
     try {
-      const user = await this.serviceUser.get(body.user)
+      const snapshot = await this.serviceUser.get(user)
 
-      if (!user) ctx.throw(404, 'User not found')
+      if (!snapshot) ctx.throw(404, 'User not found')
 
-      ctx.body = await this.serviceUser.put(user.id, {
-        name: body.name,
-        role: body.role
-      })
-      ctx.status = 200
+      await this.serviceUser.put(snapshot.id, body)
+      ctx.status = 204
       return
     } catch (err) {
       ctx.throw(500, err)

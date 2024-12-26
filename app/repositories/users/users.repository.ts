@@ -33,15 +33,14 @@ export class RepositoryUsers {
     return await this.repository.findOne({ where: { email } })
   }
 
-  async post(data: EntityUsers): Promise<string> {
-    await this.repository
+  async post(data: EntityUsers): Promise<EntityUsers> {
+    return await this.repository
       .create({
         ...data,
         createdAt: getDatePostgresTimestamp(),
         updatedAt: getDatePostgresTimestamp()
       })
       .save()
-    return '@post-users/success'
   }
 
   async put(reference: EntityUsers['id'], data: Partial<EntityUsers>): Promise<string> {
