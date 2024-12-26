@@ -1,3 +1,5 @@
+import { Context, Next } from 'koa'
+
 export interface IAuthToken {
   sub: string
   email: string
@@ -5,7 +7,7 @@ export interface IAuthToken {
 }
 
 export interface IServiceAuthLoginRequest {
-  username: string
+  email: string
   password: string
 }
 
@@ -17,6 +19,11 @@ export interface IServiceAuthLoginResponse {
   TokenType: string
 }
 
+export interface IMiddlewareAuth {
+  admin(ctx: Context, next: Next): Promise<void>
+  authenticated(ctx: Context, next: Next): Promise<void>
+}
+
 export interface IServiceAuth {
-  login(payload: IServiceAuthLoginRequest): Promise<IServiceAuthLoginResponse>
+  signIn(payload: IServiceAuthLoginRequest): Promise<IServiceAuthLoginResponse>
 }

@@ -9,8 +9,10 @@ export const Environment = envsafe({
     desc: 'The port that the App is running on',
     example: 8080
   }),
+  APP_URL: str(),
   CAVEO_DEFAULT_PASSWORD: str(),
   COGNITO_CLIENT_ID: str(),
+  COGNITO_REGION: str(),
   COGNITO_USER_POOL_ID: str(),
   NODE_ENV: str({
     devDefault: 'development',

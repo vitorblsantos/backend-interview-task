@@ -16,8 +16,8 @@ export class EntityUsers extends BaseEntity {
   })
   isOnboarded!: boolean
 
-  @Column()
-  name!: string
+  @Column({ nullable: true })
+  name?: string
 
   @Column({
     type: 'enum',

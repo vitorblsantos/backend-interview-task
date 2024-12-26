@@ -33,7 +33,7 @@ export class ServiceUsers implements IServiceUsers {
     return await this.repositoryUsers.put(reference, data)
   }
 
-  async post(data: EntityUsers): Promise<EntityUsers> {
+  async post(data: Partial<EntityUsers>): Promise<EntityUsers> {
     return await this.repositoryUsers.post(data)
   }
 }

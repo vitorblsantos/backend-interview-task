@@ -10,9 +10,8 @@ import {
 export class ServiceAuth implements IServiceAuth {
   private readonly repositoryUsers = new RepositoryUsers()
   private config = {
-    region: 'us-east-2'
+    region: Environment.COGNITO_REGION
   }
-  private userPoolId = Environment.COGNITO_USER_POOL_ID
   private clientId = Environment.COGNITO_CLIENT_ID
   private cognito: CognitoIdentityProviderClient
 
@@ -20,12 +19,12 @@ export class ServiceAuth implements IServiceAuth {
     this.cognito = new CognitoIdentityProviderClient(this.config)
   }
 
-  async login({ password, username }: IServiceAuthLoginRequest): Promise<IServiceAuthLoginResponse> {
+  async signIn({ email, password }: IServiceAuthLoginRequest): Promise<IServiceAuthLoginResponse> {
     const params = {
       AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
       ClientId: this.clientId,
       AuthParameters: {
-        USERNAME: username,
+        USERNAME: email,
         PASSWORD: password
       }
     }

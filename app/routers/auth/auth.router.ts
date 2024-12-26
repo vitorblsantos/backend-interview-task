@@ -7,7 +7,7 @@ const router = new Router({
 })
 
 router.post('/', async ctx => {
-  await controller.login(ctx)
+  await controller.signIn(ctx)
 })
 
 export const AuthRouter = router

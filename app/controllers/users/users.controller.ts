@@ -65,7 +65,7 @@ export class ControllerUsers {
   async post(ctx: Context): Promise<void> {
     const body = ctx.request.body as { email: EntityUsers['email']; name: EntityUsers['name'] }
 
-    if (!body || !body.email || !body.name) ctx.throw(400, 'Provide body.email and body.name')
+    if (!body || !body.email) ctx.throw(400, 'Provide body.email')
 
     try {
       const alreadyExists = await this.serviceUser.get(body.email)

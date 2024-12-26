@@ -33,7 +33,7 @@ export class RepositoryUsers {
     return await this.repository.findOne({ where: { email } })
   }
 
-  async post(data: EntityUsers): Promise<EntityUsers> {
+  async post(data: Partial<EntityUsers>): Promise<EntityUsers> {
     return await this.repository
       .create({
         ...data,

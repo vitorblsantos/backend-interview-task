@@ -1,6 +1,6 @@
 import Router from '@koa/router'
 
-import { Alive } from '../../controllers/index.controllers'
+import { Alive } from '@/controllers/index.controllers'
 
 const router = new Router({
   prefix: '/status'

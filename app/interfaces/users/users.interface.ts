@@ -15,5 +15,5 @@ export interface IServiceUsers {
   fetch(): Promise<EntityUsers[] | null>
   get(email: string): Promise<EntityUsers | null>
   put(reference: EntityUsers['id'], data: { name: EntityUsers['name']; role: EntityUsers['role'] }): Promise<string>
-  post(data: { email: EntityUsers['email']; name: EntityUsers['name'] }): Promise<EntityUsers>
+  post(data: { email: EntityUsers['email']; name?: EntityUsers['name'] }): Promise<EntityUsers>
 }
