@@ -6,8 +6,12 @@ const router = new Router({
   prefix: '/auth'
 })
 
-router.post('/', async ctx => {
+router.post('/login', async ctx => {
   await controller.signIn(ctx)
+})
+
+router.post('/signup', async ctx => {
+  await controller.signUp(ctx)
 })
 
 export const AuthRouter = router

@@ -1,3 +1,4 @@
+import { EntityUsers } from '@/entities/index.entities'
 import { Context, Next } from 'koa'
 
 export interface IAuthToken {
@@ -6,7 +7,7 @@ export interface IAuthToken {
   scope: string
 }
 
-export interface IServiceAuthLoginRequest {
+export interface IServiceAuthSignInRequest {
   email: string
   password: string
 }
@@ -25,5 +26,6 @@ export interface IMiddlewareAuth {
 }
 
 export interface IServiceAuth {
-  signIn(payload: IServiceAuthLoginRequest): Promise<IServiceAuthLoginResponse>
+  signIn(payload: IServiceAuthSignInRequest): Promise<IServiceAuthLoginResponse>
+  signUp(payload: Partial<EntityUsers> & { password: string }): Promise<string>
 }
