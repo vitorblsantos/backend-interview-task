@@ -27,7 +27,7 @@ export class MiddlewareAuth implements IMiddlewareAuth {
 
       if (!decodedToken) ctx.throw(401)
 
-      ctx.state.user = decodedToken.username
+      ctx.state.cognitoId = decodedToken.username
 
       return await next()
     } catch (err) {

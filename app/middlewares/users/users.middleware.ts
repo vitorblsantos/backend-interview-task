@@ -1,8 +1,8 @@
 import { Context, Next } from 'koa'
-import { EUserRole, IMiddlewareAdmin, IServiceUsers } from '@/interfaces/index.interfaces'
+import { IMiddlewareUsers, IServiceUsers } from '@/interfaces/index.interfaces'
 import { ServiceUsers } from '@/services/index.services'
 
-export class MiddlewareAdmin implements IMiddlewareAdmin {
+export class MiddlewareUsers implements IMiddlewareUsers {
   private serviceUsers: IServiceUsers
 
   constructor() {
@@ -16,14 +16,18 @@ export class MiddlewareAdmin implements IMiddlewareAdmin {
     const headers = ctx.headers
     if (headers['user-agent'] === googleCloudTasks) return await next()
 
-    if (!ctx.state.user || ctx.state.user.role !== EUserRole.ADMIN) {
+    const user = await this.serviceUsers.getByCognitoId(ctx.state.cognitoId)
+
+    if (!user) {
       ctx.body = {
-        error: '@auth-admin/execute',
+        error: '@users-middleware/execute',
         message: 'Unauthorized'
       }
       ctx.status = 401
       return Promise.resolve()
     }
+
+    ctx.state.user = user
 
     return await next()
   }

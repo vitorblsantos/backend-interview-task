@@ -1,10 +1,12 @@
 import Router from '@koa/router'
 
 import { ControllerUsers } from '@/controllers/index.controllers'
-import { MiddlewareAuth } from '@/middlewares/index.middleware'
+import { MiddlewareAdmin, MiddlewareAuth } from '@/middlewares/index.middleware'
 
 const controller = new ControllerUsers()
 const middlewareAuth = new MiddlewareAuth()
+const middlewareAdmin = new MiddlewareAdmin()
+
 const router = new Router({
   prefix: '/users'
 })
@@ -22,7 +24,7 @@ router
   .post('/', middlewareAuth.execute, async ctx => {
     await controller.post(ctx)
   })
-  .put('/', middlewareAuth.execute, async ctx => {
+  .put('/', middlewareAuth.execute, middlewareAdmin.execute, async ctx => {
     await controller.put(ctx)
   })
 

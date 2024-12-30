@@ -1,3 +1,4 @@
+import { Context, Next } from 'koa'
 import { EntityUsers } from '@/entities/index.entities'
 
 export enum EUserRole {
@@ -8,6 +9,10 @@ export enum EUserRole {
 export enum EUserStatus {
   DISABLED = 'DISABLED',
   ENABLED = 'ENABLED'
+}
+
+export interface IMiddlewareUsers {
+  execute(ctx: Context, next: Next): Promise<void>
 }
 
 export interface IServiceUsers {

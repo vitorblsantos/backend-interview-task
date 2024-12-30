@@ -1,19 +1,21 @@
 import Router from '@koa/router'
-import { ControllerAuth } from '@/controllers/index.controllers'
 
-const controller = new ControllerAuth()
+import { ControllerRoot } from '@/controllers/index.controllers'
+import { MiddlewareAuth, MiddlewareUsers } from '@/middlewares/index.middleware'
+
+const controller = new ControllerRoot()
+
+const middlewareAuth = new MiddlewareAuth()
+const middlewareUsers = new MiddlewareUsers()
+
 const router = new Router()
 
-router.post('/', async ctx => {
-  await controller.signIn(ctx)
+router.get('/me', middlewareAuth.execute, middlewareUsers.execute, async ctx => {
+  await controller.me(ctx)
 })
 
-router.post('/signup', async ctx => {
-  await controller.signUp(ctx)
+router.post('/edit-account', async ctx => {
+  await controller.editAccount(ctx)
 })
 
-router.post('/validate', async ctx => {
-  await controller.validate(ctx)
-})
-
-export const AuthRouter = router
+export const RootRouter = router

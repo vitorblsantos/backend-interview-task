@@ -7,4 +7,4 @@ export {
   IServiceAuthLoginResponse,
   IServiceAuthValidateResponse
 } from './auth/auth.interface'
-export { EUserRole, EUserStatus, IServiceUsers } from './users/users.interface'
+export { EUserRole, EUserStatus, IMiddlewareUsers, IServiceUsers } from './users/users.interface'
