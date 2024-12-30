@@ -25,7 +25,7 @@ export class MiddlewareAuth implements IMiddlewareAuth {
     try {
       const decodedToken = await this.serviceAuth.isValidAccessToken(token)
 
-      if (!decodedToken) ctx.throw(401)
+      if (!decodedToken || decodedToken === null) ctx.throw(401)
 
       ctx.state.cognitoId = decodedToken.username
 

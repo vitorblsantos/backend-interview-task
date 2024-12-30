@@ -19,7 +19,7 @@ export class ControllerUsers {
     try {
       const user = await this.serviceUser.get(body.user)
 
-      if (!user) ctx.throw(404, 'not-found')
+      if (!user || !user.id) ctx.throw(404, 'not-found')
 
       await this.serviceUser.delete(user.id)
       ctx.status = 204
@@ -57,7 +57,7 @@ export class ControllerUsers {
     try {
       const user = await this.serviceUser.get(email)
 
-      if (!user) ctx.throw(404, 'not-found')
+      if (!user) ctx.throw('not-found')
 
       ctx.body = user
       ctx.status = 200
@@ -74,12 +74,15 @@ export class ControllerUsers {
   async post(ctx: Context): Promise<void> {
     const body = ctx.request.body as Partial<EntityUsers>
 
-    if (!body || !body.email || !body.cognitoId) ctx.throw(400, 'provide-body.cognitoId-body.email')
+    if (!body || !body.email || !body.cognitoId) {
+      ctx.throw('provide-body.cognitoId-body.email')
+      return
+    }
 
     try {
       const alreadyExists = await this.serviceUser.get(body.email)
 
-      if (alreadyExists) ctx.throw(406, 'already-exists')
+      if (alreadyExists) ctx.throw('already-exists')
 
       ctx.body = await this.serviceUser.post(body)
       ctx.status = 201
@@ -107,7 +110,7 @@ export class ControllerUsers {
     try {
       const snapshot = await this.serviceUser.get(user)
 
-      if (!snapshot) ctx.throw(404, 'not-found')
+      if (!snapshot || snapshot === null) ctx.throw('not-found')
 
       await this.serviceUser.put(snapshot.id, body)
       ctx.status = 204
