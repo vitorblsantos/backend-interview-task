@@ -12,13 +12,7 @@ export interface IServiceAuthSignInRequest {
   password: string
 }
 
-export interface IServiceAuthLoginResponse {
-  AccessToken: string
-  ExpiresIn: number
-  IdToken: string
-  RefreshToken: string
-  TokenType: string
-}
+export type IServiceAuthLoginResponse = string
 
 export interface IMiddlewareAuth {
   admin(ctx: Context, next: Next): Promise<void>
@@ -26,6 +20,7 @@ export interface IMiddlewareAuth {
 }
 
 export interface IServiceAuth {
+  isValidAccessToken(token: string): Promise<boolean>
   signIn(payload: IServiceAuthSignInRequest): Promise<IServiceAuthLoginResponse>
   signUp(payload: Partial<EntityUsers> & { password: string }): Promise<string>
 }

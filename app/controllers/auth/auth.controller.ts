@@ -1,56 +1,57 @@
 import { Context } from 'koa'
 
-import { IServiceAuth, IServiceAuthSignInRequest, IServiceUsers } from '@/interfaces/index.interfaces'
-import { ServiceAuth, ServiceUsers } from '@/services/index.services'
+import { IServiceAuth, IServiceAuthSignInRequest } from '@/interfaces/index.interfaces'
+import { ServiceAuth } from '@/services/index.services'
 
 export class ControllerAuth {
   private serviceAuth: IServiceAuth
-  private serviceUsers: IServiceUsers
 
   constructor() {
     this.serviceAuth = new ServiceAuth()
-    this.serviceUsers = new ServiceUsers()
   }
 
   async signIn(ctx: Context): Promise<void> {
-    const body = ctx.request.body as IServiceAuthSignInRequest
-
-    if (!body || !body.email || !body.password) ctx.throw(400, 'Bad request')
-
     try {
-      const user = await this.serviceUsers.get(body.email)
+      const body = ctx.request.body as IServiceAuthSignInRequest
 
-      if (!user) {
-        this.serviceAuth.signUp({ email: body.email, password: body.password })
+      if (!body || !body.email || !body.password) ctx.throw(400, '@signin/bad-request')
 
-        return
-      }
-
-      const token = await this.serviceAuth.signIn(body)
-
-      ctx.body = token
-      ctx.status = 201
+      ctx.body = await this.serviceAuth.signIn(body)
+      ctx.status = 200
       return
-    } catch (error) {
-      ctx.throw(500, error)
+    } catch (err) {
+      ctx.body = `@signin/${err.name}`
+      ctx.status = 500
     }
   }
 
   async signUp(ctx: Context): Promise<void> {
-    const body = ctx.request.body as IServiceAuthSignInRequest
-
-    if (!body || !body.email) ctx.throw(400, 'Bad request')
-
     try {
-      const user = await this.serviceUsers.get(body.email)
+      const body = ctx.request.body as IServiceAuthSignInRequest
 
-      if (user) ctx.throw(406, 'User already exists')
+      if (!body || !body.email) ctx.throw(400, '@signup/bad-request')
 
       ctx.body = await this.serviceAuth.signUp(body)
       ctx.status = 201
       return
-    } catch (error) {
-      ctx.throw(500, error)
+    } catch (err) {
+      ctx.body = `@signup/${err.name}`
+      ctx.status = 500
+    }
+  }
+
+  async validate(ctx: Context): Promise<void> {
+    try {
+      const body = ctx.request.body as { token: string }
+
+      if (!body || !body.token) ctx.throw(400, '@validate/bad-request')
+
+      ctx.body = await this.serviceAuth.isValidAccessToken(body.token)
+      ctx.status = 200
+      return
+    } catch (err) {
+      ctx.body = `@validate/${err.name}`
+      ctx.status = 500
     }
   }
 }

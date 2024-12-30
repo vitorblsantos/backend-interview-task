@@ -1,0 +1,12 @@
+{
+  "emulators": {
+    "singleProjectMode": true,
+    "tasks": {
+      "port": 9090
+    },
+    "ui": {
+      "enabled": true,
+      "port": 9191
+    }
+  }
+}

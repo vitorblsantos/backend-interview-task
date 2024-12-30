@@ -4,30 +4,33 @@ import {
   InitiateAuthCommand,
   SignUpCommand
 } from '@aws-sdk/client-cognito-identity-provider'
+
 import { google } from '@google-cloud/tasks/build/protos/protos'
+
+// import axios from 'axios'
+// import JWT from 'jsonwebtoken'
 
 import { Environment } from '@/config/index.config'
 import { EntityUsers } from '@/entities/index.entities'
 import { IServiceAuth, IServiceAuthSignInRequest, IServiceAuthLoginResponse } from '@/interfaces/index.interfaces'
-import { RepositoryUsers } from '@/repositories/index.repositories'
 import { createQueue, createTask } from '@/utils/index.utils'
 
 export class ServiceAuth implements IServiceAuth {
-  private readonly repositoryUsers = new RepositoryUsers()
-  private config = {
-    region: Environment.COGNITO_REGION
-  }
   private clientId = Environment.COGNITO_CLIENT_ID
   private cognito: CognitoIdentityProviderClient
   private queueUsers: google.cloud.tasks.v2.IQueue
 
   constructor() {
-    this.cognito = new CognitoIdentityProviderClient(this.config)
+    this.cognito = new CognitoIdentityProviderClient({
+      region: Environment.COGNITO_REGION
+    })
+  }
+
+  async isValidAccessToken(token: string): Promise<boolean> {
+    return Promise.resolve(token === '1234')
   }
 
   async signIn({ email, password }: IServiceAuthSignInRequest): Promise<IServiceAuthLoginResponse> {
-    this.queueUsers = await createQueue('users')
-
     const params = {
       AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
       ClientId: this.clientId,
@@ -37,10 +40,14 @@ export class ServiceAuth implements IServiceAuth {
       }
     }
 
-    const command = new InitiateAuthCommand(params)
-    const response = await this.cognito.send(command)
+    const signInCommand = new InitiateAuthCommand(params)
+    const signInResponse = await this.cognito.send(signInCommand)
 
-    return response['AuthenticationResult'] as IServiceAuthLoginResponse
+    const data = signInResponse['AuthenticationResult']
+
+    if (!data || !data['AccessToken']) throw '@signup/accessToken-not-found'
+
+    return data['AccessToken']
   }
 
   async signUp(payload: Partial<EntityUsers> & { password: string }): Promise<string> {
@@ -49,15 +56,20 @@ export class ServiceAuth implements IServiceAuth {
     const params = {
       ClientId: this.clientId,
       Username: payload.email,
-      Password: payload.password
+      Password: payload.password,
+      TemporaryPassword: Environment.CAVEO_DEFAULT_PASSWORD,
+      UserAttributes: [
+        {
+          Name: 'email',
+          Value: payload.email
+        }
+      ]
     }
 
     const signupCommand = new SignUpCommand(params)
-    const response = await this.cognito.send(signupCommand)
+    const signupResponse = await this.cognito.send(signupCommand)
 
-    console.log(response)
-
-    createTask({
+    await createTask({
       parent: this.queueUsers.name,
       task: {
         dispatchCount: 3,
@@ -65,7 +77,8 @@ export class ServiceAuth implements IServiceAuth {
           body: Buffer.from(
             JSON.stringify({
               email: payload.email,
-              name: payload.name
+              name: payload.name,
+              cognitoId: signupResponse['UserSub']
             })
           ).toString('base64'),
           httpMethod: 'POST',

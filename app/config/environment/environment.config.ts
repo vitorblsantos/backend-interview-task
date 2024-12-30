@@ -31,7 +31,5 @@ export const Environment = envsafe({
   POSTGRES_USER: str({
     devDefault: 'root'
   }),
-  SERVICE_ACCOUNT: str({
-    devDefault: 'root'
-  })
+  SERVICE_ACCOUNT: str()
 })

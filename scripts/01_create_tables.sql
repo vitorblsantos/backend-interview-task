@@ -1,5 +1,6 @@
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  "cognitoId" UUID,
   email VARCHAR(50) NOT NULL,
   "isOnboarded" BOOLEAN DEFAULT FALSE,
   name VARCHAR(80),

@@ -4,9 +4,7 @@ import { google } from '@google-cloud/tasks/build/protos/protos'
 
 const { CloudTasksClient } = v2
 
-const client = new CloudTasksClient({
-  credentials: JSON.parse(Environment.SERVICE_ACCOUNT)
-})
+const client = new CloudTasksClient()
 
 const location = 'southamerica-east1'
 const project = JSON.parse(Environment.SERVICE_ACCOUNT).project_id

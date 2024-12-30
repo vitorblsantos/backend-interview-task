@@ -13,7 +13,8 @@ export enum EUserStatus {
 export interface IServiceUsers {
   delete(reference: EntityUsers['id']): Promise<string>
   fetch(): Promise<EntityUsers[] | null>
-  get(email: string): Promise<EntityUsers | null>
+  get(id: string): Promise<EntityUsers | null>
+  getByEmail(email: string): Promise<EntityUsers | null>
   put(reference: EntityUsers['id'], data: { name: EntityUsers['name']; role: EntityUsers['role'] }): Promise<string>
-  post(data: { email: EntityUsers['email']; name?: EntityUsers['name'] }): Promise<EntityUsers>
+  post(data: Partial<EntityUsers>): Promise<EntityUsers>
 }

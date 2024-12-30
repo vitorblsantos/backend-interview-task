@@ -8,6 +8,9 @@ export class EntityUsers extends BaseEntity {
   @PrimaryColumn()
   id!: string
 
+  @Column({ nullable: true })
+  cognitoId!: string
+
   @Column()
   email!: string
 
