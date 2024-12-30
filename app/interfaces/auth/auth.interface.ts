@@ -1,4 +1,5 @@
 import { EntityUsers } from '@/entities/index.entities'
+import { JWTPayload } from 'jose'
 import { Context, Next } from 'koa'
 
 export interface IAuthToken {
@@ -20,7 +21,7 @@ export interface IMiddlewareAuth {
 }
 
 export interface IServiceAuth {
-  isValidAccessToken(token: string): Promise<boolean>
+  isValidAccessToken(token: string): Promise<boolean | JWTPayload>
   signIn(payload: IServiceAuthSignInRequest): Promise<IServiceAuthLoginResponse>
   signUp(payload: Partial<EntityUsers> & { password: string }): Promise<string>
 }

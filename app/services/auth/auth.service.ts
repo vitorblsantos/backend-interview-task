@@ -6,9 +6,9 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 
 import { google } from '@google-cloud/tasks/build/protos/protos'
-
+import { KeyObject } from 'crypto'
+import { jwtVerify, importJWK, JWTPayload } from 'jose'
 import axios from 'axios'
-import { jwtVerify, JWK } from 'jose'
 
 import { Environment } from '@/config/index.config'
 import { EntityUsers } from '@/entities/index.entities'
@@ -34,27 +34,38 @@ export class ServiceAuth implements IServiceAuth {
     })
   }
 
-  private async getPublicKeys(): Promise<JWK[]> {
+  private async getPublicKeys(): Promise<Record<string, KeyObject>> {
     const url = `https://cognito-idp.${Environment.COGNITO_REGION}.amazonaws.com/${Environment.COGNITO_USER_POOL_ID}/.well-known/jwks.json`
     const response = await axios.get<{ keys: Jwk[] }>(url)
-    return response.data.keys.map(key => JWK.asKey(key))
-  }
+    const keys = response.data.keys
 
-  async isValidAccessToken(token: string): Promise<boolean> {
-    const publicKeys = await this.getPublicKeys()
-
-    for (const publicKey of publicKeys) {
-      try {
-        const decodedToken = await jwtVerify(token, publicKey)
-        console.log(decodedToken.payload)
-
-        return false
-      } catch (error) {
-        continue
+    const publicKeys: Record<string, KeyObject> = {}
+    for (const key of keys) {
+      const publicKey = await importJWK(key, 'RS256')
+      if (publicKey instanceof KeyObject) {
+        publicKeys[key.kid] = publicKey
       }
     }
 
-    return false
+    return publicKeys
+  }
+
+  async isValidAccessToken(token: string): Promise<boolean | JWTPayload> {
+    const decodedHeader = JSON.parse(Buffer.from(token.split('.')[0], 'base64').toString('utf-8'))
+    const kid = decodedHeader.kid
+
+    if (!kid) throw 'token-does-not-have-kid-header'
+
+    const publicKeys = await this.getPublicKeys()
+    const publicKey = publicKeys[kid]
+
+    if (!publicKey) throw 'public-key-not-found'
+
+    const { payload } = await jwtVerify(token, publicKey)
+
+    if (!payload) return false
+
+    return payload
   }
 
   async signIn({ email, password }: IServiceAuthSignInRequest): Promise<IServiceAuthLoginResponse> {
@@ -72,7 +83,7 @@ export class ServiceAuth implements IServiceAuth {
 
     const data = signInResponse['AuthenticationResult']
 
-    if (!data || !data['AccessToken']) throw '@signup/accessToken-not-found'
+    if (!data || !data['AccessToken']) throw 'accessToken-not-found'
 
     return data['AccessToken']
   }
@@ -114,6 +125,6 @@ export class ServiceAuth implements IServiceAuth {
       }
     })
 
-    return '@signup/success'
+    return 'success'
   }
 }
