@@ -13,10 +13,10 @@ router
   .post('/', async ctx => {
     await controller.signIn(ctx)
   })
-  .post('/signup', middlewareAuth.authenticated, async ctx => {
+  .post('/signup', middlewareAuth.execute, async ctx => {
     await controller.signUp(ctx)
   })
-  .post('/validate', middlewareAuth.authenticated, async ctx => {
+  .post('/validate', middlewareAuth.execute, async ctx => {
     await controller.validate(ctx)
   })
 

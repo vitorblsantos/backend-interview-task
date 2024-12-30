@@ -9,22 +9,21 @@ export class MiddlewareAuth implements IMiddlewareAuth {
   constructor() {
     this.serviceAuth = new ServiceAuth()
     this.serviceUsers = new ServiceUsers()
+
+    this.execute = this.execute.bind(this)
   }
 
-  async admin(ctx: Context, next: Next): Promise<void> {
-    // await this.serviceUsers.get()
-    await next()
-  }
-
-  async authenticated(ctx: Context, next: Next): Promise<void> {
+  async execute(ctx: Context, next: Next): Promise<void> {
     const googleCloudTasks = 'Google-Cloud-Tasks'
     const headers = ctx.headers
 
     if (!headers.authorization && headers['user-agent'] !== googleCloudTasks) ctx.throw(401, 'unauthorized')
 
-    const token = headers.authorization?.split(/\d/)[1]
+    const token = headers.authorization?.split(' ')[1]
 
     if (!token) ctx.throw(400, 'invalid token')
+
+    if (!(await this.serviceAuth.isValidAccessToken(token))) ctx.throw(401, 'unauthorized')
 
     await next()
   }

@@ -10,19 +10,19 @@ const router = new Router({
 })
 
 router
-  .delete('/', middlewareAuth.authenticated, middlewareAuth.admin, async ctx => {
+  .delete('/', middlewareAuth.execute, async ctx => {
     await controller.delete(ctx)
   })
-  .get('/:email', middlewareAuth.authenticated, async ctx => {
+  .get('/:email', middlewareAuth.execute, async ctx => {
     await controller.get(ctx)
   })
-  .get('/', middlewareAuth.authenticated, async ctx => {
+  .get('/', middlewareAuth.execute, async ctx => {
     await controller.fetch(ctx)
   })
-  .post('/', middlewareAuth.authenticated, async ctx => {
+  .post('/', middlewareAuth.execute, async ctx => {
     await controller.post(ctx)
   })
-  .put('/', middlewareAuth.authenticated, async ctx => {
+  .put('/', middlewareAuth.execute, async ctx => {
     await controller.put(ctx)
   })
 

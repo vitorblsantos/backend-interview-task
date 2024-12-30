@@ -16,8 +16,7 @@ export interface IServiceAuthSignInRequest {
 export type IServiceAuthLoginResponse = string
 
 export interface IMiddlewareAuth {
-  admin(ctx: Context, next: Next): Promise<void>
-  authenticated(ctx: Context, next: Next): Promise<void>
+  execute(ctx: Context, next: Next): Promise<void>
 }
 
 export interface IServiceAuth {
