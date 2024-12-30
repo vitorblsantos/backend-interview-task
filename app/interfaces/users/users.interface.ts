@@ -21,6 +21,9 @@ export interface IServiceUsers {
   get(id: string): Promise<EntityUsers | null>
   getByCognitoId(cognitoId: string): Promise<EntityUsers | null>
   getByEmail(email: string): Promise<EntityUsers | null>
-  put(reference: EntityUsers['id'], data: { name: EntityUsers['name']; role: EntityUsers['role'] }): Promise<string>
+  put(
+    reference: EntityUsers['id'],
+    data: { isOnboarded?: EntityUsers['isOnboarded']; name: EntityUsers['name']; role?: EntityUsers['role'] }
+  ): Promise<string>
   post(data: Partial<EntityUsers>): Promise<EntityUsers>
 }

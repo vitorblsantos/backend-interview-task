@@ -1,6 +1,6 @@
 import { Context } from 'koa'
 
-import { IServiceAuth, IServiceUsers } from '@/interfaces/index.interfaces'
+import { EUserRole, IServiceAuth, IServiceUsers } from '@/interfaces/index.interfaces'
 import { ServiceAuth, ServiceUsers } from '@/services/index.services'
 import { EntityUsers } from '@/entities/index.entities'
 
@@ -22,7 +22,18 @@ export class ControllerRoot {
         user: EntityUsers['id']
       }
 
-      ctx.body = await this.serviceUsers.put(body.user, body)
+      if (ctx.state.user.role === EUserRole.ADMIN)
+        ctx.body = await this.serviceUsers.put(body.user, {
+          name: body.name,
+          role: body.role
+        })
+
+      if (ctx.state.user.role === EUserRole.USER)
+        ctx.body = await this.serviceUsers.put(body.user, {
+          isOnboarded: true,
+          name: body.name
+        })
+
       ctx.status = 200
       return
     } catch (err) {

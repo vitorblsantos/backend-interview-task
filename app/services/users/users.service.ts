@@ -29,7 +29,6 @@ export class ServiceUsers implements IServiceUsers {
     reference: EntityUsers['id'],
     data: {
       isOnboarded: EntityUsers['isOnboarded']
-      email: EntityUsers['email']
       name: EntityUsers['name']
       role: EntityUsers['role']
     }
