@@ -20,8 +20,11 @@ export class ControllerAuth {
       ctx.status = 200
       return
     } catch (err) {
-      ctx.body = `@signin/${err.name}`
-      ctx.status = 500
+      ctx.body = {
+        error: '@auth/signin',
+        message: err.message
+      }
+      ctx.status = err.status || 500
     }
   }
 
@@ -35,8 +38,11 @@ export class ControllerAuth {
       ctx.status = 201
       return
     } catch (err) {
-      ctx.body = `@signup/${err.name}`
-      ctx.status = 500
+      ctx.body = {
+        error: '@auth/signup',
+        message: err.message
+      }
+      ctx.status = err.status || 500
     }
   }
 
@@ -50,8 +56,11 @@ export class ControllerAuth {
       ctx.status = 200
       return
     } catch (err) {
-      ctx.body = `@validate/${err.name}`
-      ctx.status = 500
+      ctx.body = {
+        error: '@auth/validate',
+        message: err.message
+      }
+      ctx.status = err.status || 500
     }
   }
 }

@@ -7,13 +7,21 @@ import {
 
 import { google } from '@google-cloud/tasks/build/protos/protos'
 
-// import axios from 'axios'
-// import JWT from 'jsonwebtoken'
+import axios from 'axios'
+import { jwtVerify, JWK } from 'jose'
 
 import { Environment } from '@/config/index.config'
 import { EntityUsers } from '@/entities/index.entities'
 import { IServiceAuth, IServiceAuthSignInRequest, IServiceAuthLoginResponse } from '@/interfaces/index.interfaces'
 import { createQueue, createTask } from '@/utils/index.utils'
+
+interface Jwk {
+  kid: string
+  kty: string
+  use: string
+  n: string
+  e: string
+}
 
 export class ServiceAuth implements IServiceAuth {
   private clientId = Environment.COGNITO_CLIENT_ID
@@ -26,8 +34,27 @@ export class ServiceAuth implements IServiceAuth {
     })
   }
 
+  private async getPublicKeys(): Promise<JWK[]> {
+    const url = `https://cognito-idp.${Environment.COGNITO_REGION}.amazonaws.com/${Environment.COGNITO_USER_POOL_ID}/.well-known/jwks.json`
+    const response = await axios.get<{ keys: Jwk[] }>(url)
+    return response.data.keys.map(key => JWK.asKey(key))
+  }
+
   async isValidAccessToken(token: string): Promise<boolean> {
-    return Promise.resolve(token === '1234')
+    const publicKeys = await this.getPublicKeys()
+
+    for (const publicKey of publicKeys) {
+      try {
+        const decodedToken = await jwtVerify(token, publicKey)
+        console.log(decodedToken.payload)
+
+        return false
+      } catch (error) {
+        continue
+      }
+    }
+
+    return false
   }
 
   async signIn({ email, password }: IServiceAuthSignInRequest): Promise<IServiceAuthLoginResponse> {

@@ -14,19 +14,22 @@ export class ControllerUsers {
   async delete(ctx: Context): Promise<void> {
     const body = ctx.request.body as { user: EntityUsers['id'] }
 
-    if (!body || !body.user) ctx.throw(400, '@users-delete/provide-body.user')
+    if (!body || !body.user) ctx.throw(400, 'provide-body.user')
 
     try {
       const user = await this.serviceUser.get(body.user)
 
-      if (!user) ctx.throw(404, '@users-delete/not-found')
+      if (!user) ctx.throw(404, 'not-found')
 
       await this.serviceUser.delete(user.id)
       ctx.status = 204
       return
     } catch (err) {
-      ctx.body = `@users-delete/${err.name}`
-      ctx.status = 500
+      ctx.body = {
+        error: '@users/delete',
+        message: err.message
+      }
+      ctx.status = err.status || 500
     }
   }
 
@@ -38,46 +41,55 @@ export class ControllerUsers {
       ctx.status = 200
       return
     } catch (err) {
-      ctx.body = `@users-fetch/${err.name}`
-      ctx.status = 500
+      ctx.body = {
+        error: '@users/fetch',
+        message: err.message
+      }
+      ctx.status = err.status || 500
     }
   }
 
   async get(ctx: Context): Promise<void> {
     const { email }: { email: string } = ctx.params
 
-    if (!email) ctx.throw(400, '@users-get/provide-params.email')
+    if (!email) ctx.throw(400, 'provide-params.email')
 
     try {
       const user = await this.serviceUser.get(email)
 
-      if (!user) ctx.throw(404, '@users-get/not-found')
+      if (!user) ctx.throw(404, 'not-found')
 
       ctx.body = user
       ctx.status = 200
       return
     } catch (err) {
-      ctx.body = `@users-get/${err.name}`
-      ctx.status = 500
+      ctx.body = {
+        error: '@users/get',
+        message: err.message
+      }
+      ctx.status = err.status || 500
     }
   }
 
   async post(ctx: Context): Promise<void> {
     const body = ctx.request.body as Partial<EntityUsers>
 
-    if (!body || !body.email || !body.cognitoId) ctx.throw(400, '@users-post/provide-body.cognitoId-body.email')
+    if (!body || !body.email || !body.cognitoId) ctx.throw(400, 'provide-body.cognitoId-body.email')
 
     try {
       const alreadyExists = await this.serviceUser.get(body.email)
 
-      if (alreadyExists) ctx.throw(406, '@users-post/already-exists')
+      if (alreadyExists) ctx.throw(406, 'already-exists')
 
       ctx.body = await this.serviceUser.post(body)
       ctx.status = 201
       return
     } catch (err) {
-      ctx.body = `@users-post/${err.name}`
-      ctx.status = 500
+      ctx.body = {
+        error: '@users/post',
+        message: err.message
+      }
+      ctx.status = err.status || 500
     }
   }
 
@@ -90,19 +102,22 @@ export class ControllerUsers {
     }
 
     if (!body || (!body.isOnboarded && !body.name && !body.role))
-      ctx.throw(400, '@users-put/provide-body.isOnboarded-body.name-body.role')
+      ctx.throw(400, 'provide-body.isOnboarded-body.name-body.role')
 
     try {
       const snapshot = await this.serviceUser.get(user)
 
-      if (!snapshot) ctx.throw(404, '@users-put/not-found')
+      if (!snapshot) ctx.throw(404, 'not-found')
 
       await this.serviceUser.put(snapshot.id, body)
       ctx.status = 204
       return
     } catch (err) {
-      ctx.body = `@users-put/${err.name}`
-      ctx.status = 500
+      ctx.body = {
+        error: '@users/put',
+        message: err.message
+      }
+      ctx.status = err.status || 500
     }
   }
 }

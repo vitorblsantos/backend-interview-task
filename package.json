@@ -21,7 +21,7 @@
     "dotenv": "^16.4.7",
     "envsafe": "^2.0.3",
     "helmet": "^8.0.0",
-    "jsonwebtoken": "^9.0.2",
+    "jose": "^5.9.6",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.4.1",
     "koa-helmet": "^8.0.1",
