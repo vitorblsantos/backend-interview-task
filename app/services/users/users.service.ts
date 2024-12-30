@@ -13,6 +13,10 @@ export class ServiceUsers implements IServiceUsers {
     return await this.repositoryUsers.get(id)
   }
 
+  async getByCognitoId(cognitoId: EntityUsers['cognitoId']): Promise<EntityUsers | null> {
+    return await this.repositoryUsers.getByCognitoId(cognitoId)
+  }
+
   async getByEmail(email: EntityUsers['email']): Promise<EntityUsers | null> {
     return await this.repositoryUsers.getByEmail(email)
   }

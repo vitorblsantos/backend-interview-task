@@ -1,14 +1,12 @@
 import { Context, Next } from 'koa'
-import { IMiddlewareAuth, IServiceAuth, IServiceUsers } from '@/interfaces/index.interfaces'
-import { ServiceAuth, ServiceUsers } from '@/services/index.services'
+import { IMiddlewareAuth, IServiceAuth } from '@/interfaces/index.interfaces'
+import { ServiceAuth } from '@/services/index.services'
 
 export class MiddlewareAuth implements IMiddlewareAuth {
   private serviceAuth: IServiceAuth
-  private serviceUsers: IServiceUsers
 
   constructor() {
     this.serviceAuth = new ServiceAuth()
-    this.serviceUsers = new ServiceUsers()
 
     this.execute = this.execute.bind(this)
   }
@@ -17,14 +15,28 @@ export class MiddlewareAuth implements IMiddlewareAuth {
     const googleCloudTasks = 'Google-Cloud-Tasks'
     const headers = ctx.headers
 
-    if (!headers.authorization && headers['user-agent'] !== googleCloudTasks) ctx.throw(401, 'unauthorized')
+    if (!headers.authorization && headers['user-agent'] !== googleCloudTasks) ctx.throw(401)
+    if (headers['user-agent'] === googleCloudTasks) return await next()
 
     const token = headers.authorization?.split(' ')[1]
 
-    if (!token) ctx.throw(400, 'invalid token')
+    if (!token) ctx.throw(400, 'Bad request')
 
-    if (!(await this.serviceAuth.isValidAccessToken(token))) ctx.throw(401, 'unauthorized')
+    try {
+      const decodedToken = await this.serviceAuth.isValidAccessToken(token)
 
-    await next()
+      if (!decodedToken) ctx.throw(401)
+
+      ctx.state.user = decodedToken.username
+
+      return await next()
+    } catch (err) {
+      ctx.body = {
+        error: '@auth-middleware/execute',
+        message: err.code
+      }
+      ctx.status = 401
+      return Promise.resolve()
+    }
   }
 }

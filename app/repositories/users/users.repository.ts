@@ -29,6 +29,10 @@ export class RepositoryUsers {
     return await this.repository.findOne({ where: { id } })
   }
 
+  async getByCognitoId(cognitoId: EntityUsers['cognitoId']): Promise<EntityUsers | null> {
+    return await this.repository.findOne({ where: { cognitoId } })
+  }
+
   async getByEmail(email: EntityUsers['email']): Promise<EntityUsers | null> {
     return await this.repository.findOne({ where: { email } })
   }

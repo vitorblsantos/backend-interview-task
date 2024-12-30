@@ -12,7 +12,12 @@ import axios from 'axios'
 
 import { Environment } from '@/config/index.config'
 import { EntityUsers } from '@/entities/index.entities'
-import { IServiceAuth, IServiceAuthSignInRequest, IServiceAuthLoginResponse } from '@/interfaces/index.interfaces'
+import {
+  IServiceAuth,
+  IServiceAuthSignInRequest,
+  IServiceAuthLoginResponse,
+  IServiceAuthValidateResponse
+} from '@/interfaces/index.interfaces'
 import { createQueue, createTask } from '@/utils/index.utils'
 
 interface Jwk {
@@ -50,7 +55,7 @@ export class ServiceAuth implements IServiceAuth {
     return publicKeys
   }
 
-  async isValidAccessToken(token: string): Promise<boolean | JWTPayload> {
+  async isValidAccessToken(token: string): Promise<null | (JWTPayload & IServiceAuthValidateResponse)> {
     const decodedHeader = JSON.parse(Buffer.from(token.split('.')[0], 'base64').toString('utf-8'))
     const kid = decodedHeader.kid
 
@@ -63,9 +68,9 @@ export class ServiceAuth implements IServiceAuth {
 
     const { payload } = await jwtVerify(token, publicKey)
 
-    if (!payload) return false
+    if (!payload) return null
 
-    return payload
+    return payload as JWTPayload & IServiceAuthValidateResponse
   }
 
   async signIn({ email, password }: IServiceAuthSignInRequest): Promise<IServiceAuthLoginResponse> {
