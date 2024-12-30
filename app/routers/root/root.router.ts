@@ -14,7 +14,7 @@ router.get('/me', middlewareAuth.execute, middlewareUsers.execute, async ctx => 
   await controller.me(ctx)
 })
 
-router.post('/edit-account', async ctx => {
+router.put('/edit-account', middlewareAuth.execute, middlewareUsers.execute, async ctx => {
   await controller.editAccount(ctx)
 })
 

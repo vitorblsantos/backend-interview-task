@@ -14,7 +14,7 @@ export class ControllerAuth {
     try {
       const body = ctx.request.body as IServiceAuthSignInRequest
 
-      if (!body || !body.email || !body.password) ctx.throw(400, '@signin/bad-request')
+      if (!body || !body.email || !body.password) ctx.throw(400, 'Invalid payload')
 
       ctx.body = await this.serviceAuth.signIn(body)
       ctx.status = 200

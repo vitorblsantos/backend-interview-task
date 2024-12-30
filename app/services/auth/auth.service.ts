@@ -16,7 +16,8 @@ import {
   IServiceAuth,
   IServiceAuthSignInRequest,
   IServiceAuthLoginResponse,
-  IServiceAuthValidateResponse
+  IServiceAuthValidateResponse,
+  EUserRole
 } from '@/interfaces/index.interfaces'
 import { createQueue, createTask } from '@/utils/index.utils'
 
@@ -105,6 +106,14 @@ export class ServiceAuth implements IServiceAuth {
         {
           Name: 'email',
           Value: payload.email
+        },
+        {
+          Name: 'role',
+          Value: EUserRole.USER
+        },
+        {
+          Name: 'isOnboarded',
+          Value: '0'
         }
       ]
     }
