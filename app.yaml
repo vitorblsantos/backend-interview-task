@@ -26,14 +26,24 @@ spec:
           env:
             - name: APP_PORT
               value: '8080'
+            - name: APP_URL
+              value: 'https://caveo-bff-824385020093.us-central1.run.app'
+            - name: CAVEO_DEFAULT_PASSWORD
+              value: 'Caveo@2024'
+            - name: COGNITO_CLIENT_ID
+              value: '1umo3njvmm0cl00ud7hpk3hoog'
+            - name: COGNITO_REGION
+              value: 'us-east-2'
+            - name: COGNITO_USER_POOL_ID
+              value: 'us-east-2_DMDaCuZl2'
             - name: NODE_ENV
               value: 'production'
             - name: POSTGRES_DB
-              value: 'caveo-database'
+              value: 'db_0f1b94ec_cd0c_4580_b791_f9f1ec73c89c'
             - name: POSTGRES_PORT
               value: '5432'
             - name: POSTGRES_USER
-              value: 'postgres'
+              value: 'u_0f1b94ec_cd0c_4580_b791_f9f1ec73c89c'
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
@@ -44,6 +54,11 @@ spec:
                 secretKeyRef:
                   key: latest
                   name: CAVEO_BFF_POSTGRES_PASSWORD
+            - name: SERVICE_ACCOUNT
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: CAVEO_BFF_SERVICE_ACCOUNT
 
           resources:
             limits:
