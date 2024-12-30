@@ -19,7 +19,7 @@ export class ControllerUsers {
     try {
       const user = await this.serviceUser.get(body.user)
 
-      if (!user || !user.id) ctx.throw(404, 'not-found')
+      if (!user) return ctx.throw('not-found')
 
       await this.serviceUser.delete(user.id)
       ctx.status = 204
@@ -110,7 +110,7 @@ export class ControllerUsers {
     try {
       const snapshot = await this.serviceUser.get(user)
 
-      if (!snapshot || snapshot === null) ctx.throw('not-found')
+      if (!snapshot) return ctx.throw('not-found')
 
       await this.serviceUser.put(snapshot.id, body)
       ctx.status = 204

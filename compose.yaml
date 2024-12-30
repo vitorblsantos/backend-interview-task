@@ -37,7 +37,6 @@ services:
       POSTGRES_PASSWORD: caveo@2024
       POSTGRES_PORT: 5432
       POSTGRES_USER: postgres
-      SERVICE_ACCOUNT: '123412341234'
     image: us.gcr.io/vitorblsantos/caveo-bff:latest
     networks:
       - caveo-network
