@@ -77,6 +77,8 @@ export class ControllerUsers {
   async post(ctx: Context): Promise<void> {
     const body = ctx.request.body as Partial<EntityUsers>
 
+    console.log(body)
+
     if (!body || !body.email || !body.cognitoId) return ctx.throw('provide-body.cognitoId-body.email')
 
     try {
