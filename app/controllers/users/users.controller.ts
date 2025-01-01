@@ -1,6 +1,6 @@
 import { Context } from 'koa'
 
-import { IServiceUsers } from '@/interfaces/index.interfaces'
+import { EUserRole, EUserStatus, IServiceUsers } from '@/interfaces/index.interfaces'
 import { ServiceUsers } from '@/services/index.services'
 import { EntityUsers } from '@/entities/index.entities'
 
@@ -77,16 +77,20 @@ export class ControllerUsers {
   async post(ctx: Context): Promise<void> {
     const body = ctx.request.body as Partial<EntityUsers>
 
-    console.log(body)
-
-    if (!body || !body.email || !body.cognitoId) return ctx.throw('provide-body.cognitoId-body.email')
+    if (!body || !body.email || !body.cognitoId) return ctx.throw('Missing required parameters: email || cognitoId')
 
     try {
-      const alreadyExists = await this.serviceUser.get(body.email)
+      const alreadyExists = await this.serviceUser.getByEmail(body.email)
 
       if (alreadyExists) return ctx.throw('already-exists')
 
-      ctx.body = await this.serviceUser.post(body)
+      ctx.body = await this.serviceUser.post({
+        ...body,
+        isOnboarded: false,
+        role: EUserRole.USER,
+        status: EUserStatus.ENABLED
+      })
+
       ctx.status = 201
       return Promise.resolve()
     } catch (err) {
