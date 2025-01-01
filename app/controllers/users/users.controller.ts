@@ -112,7 +112,7 @@ export class ControllerUsers {
     }
 
     if (!body || (!body.isOnboarded && !body.name && !body.role))
-      return ctx.throw(400, 'provide-body.isOnboarded-body.name-body.role')
+      return ctx.throw('Missing required parameters: isOnboarded || name || role')
 
     try {
       const snapshot = await this.serviceUser.get(user)
