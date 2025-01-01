@@ -77,9 +77,6 @@ export class ControllerUsers {
   async post(ctx: Context): Promise<void> {
     const body = ctx.request.body as Partial<EntityUsers>
 
-    console.log({ req: ctx.request })
-    console.log({ body: ctx.request.body })
-
     if (!body || !body.email || !body.cognitoId) return ctx.throw('Missing required parameters: email || cognitoId')
 
     try {
