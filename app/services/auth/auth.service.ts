@@ -86,7 +86,7 @@ export class ServiceAuth implements IServiceAuth {
     return data['AccessToken']
   }
 
-  async signUp(payload: Partial<EntityUsers> & { password: string }): Promise<string> {
+  async signUp(payload: Partial<EntityUsers> & { password?: string }): Promise<string> {
     this.queueUsers = await createQueue('users')
 
     const params = {
@@ -105,15 +105,19 @@ export class ServiceAuth implements IServiceAuth {
     const signupCommand = new SignUpCommand(params)
     const signupResponse = await this.cognito.send(signupCommand)
 
+    delete payload.password
+
     await createTask({
       parent: this.queueUsers.name,
       task: {
         dispatchCount: 3,
         httpRequest: {
+          headers: {
+            'Content-Type': 'application/json'
+          },
           body: Buffer.from(
             JSON.stringify({
-              email: payload.email,
-              name: payload.name,
+              ...payload,
               cognitoId: signupResponse['UserSub']
             })
           ).toString('base64'),
