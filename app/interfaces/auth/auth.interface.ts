@@ -8,6 +8,14 @@ export interface IAuthToken {
   scope: string
 }
 
+export interface IJwk {
+  kid: string
+  kty: string
+  use: string
+  n: string
+  e: string
+}
+
 export interface IServiceAuthSignInRequest {
   email: string
   password: string

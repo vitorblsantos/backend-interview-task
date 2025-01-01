@@ -1,6 +1,7 @@
 export { IMiddlewareAdmin } from './admin/admin.interface'
 export {
   IAuthToken,
+  IJwk,
   IMiddlewareAuth,
   IServiceAuth,
   IServiceAuthSignInRequest,

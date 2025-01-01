@@ -17,17 +17,9 @@ import {
   IServiceAuthSignInRequest,
   IServiceAuthLoginResponse,
   IServiceAuthValidateResponse,
-  EUserRole
+  IJwk
 } from '@/interfaces/index.interfaces'
 import { createQueue, createTask } from '@/utils/index.utils'
-
-interface Jwk {
-  kid: string
-  kty: string
-  use: string
-  n: string
-  e: string
-}
 
 export class ServiceAuth implements IServiceAuth {
   private clientId = Environment.COGNITO_CLIENT_ID
@@ -42,7 +34,7 @@ export class ServiceAuth implements IServiceAuth {
 
   private async getPublicKeys(): Promise<Record<string, KeyObject>> {
     const url = `https://cognito-idp.${Environment.COGNITO_REGION}.amazonaws.com/${Environment.COGNITO_USER_POOL_ID}/.well-known/jwks.json`
-    const response = await axios.get<{ keys: Jwk[] }>(url)
+    const response = await axios.get<{ keys: IJwk[] }>(url)
     const keys = response.data.keys
 
     const publicKeys: Record<string, KeyObject> = {}
@@ -106,14 +98,6 @@ export class ServiceAuth implements IServiceAuth {
         {
           Name: 'email',
           Value: payload.email
-        },
-        {
-          Name: 'role',
-          Value: EUserRole.USER
-        },
-        {
-          Name: 'isOnboarded',
-          Value: '0'
         }
       ]
     }

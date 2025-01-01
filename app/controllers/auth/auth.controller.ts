@@ -1,20 +1,31 @@
 import { Context } from 'koa'
 
-import { IServiceAuth, IServiceAuthSignInRequest } from '@/interfaces/index.interfaces'
-import { ServiceAuth } from '@/services/index.services'
+import { IServiceAuth, IServiceAuthSignInRequest, IServiceUsers } from '@/interfaces/index.interfaces'
+import { ServiceAuth, ServiceUsers } from '@/services/index.services'
 
 export class ControllerAuth {
   private serviceAuth: IServiceAuth
+  private serviceUsers: IServiceUsers
 
   constructor() {
     this.serviceAuth = new ServiceAuth()
+    this.serviceUsers = new ServiceUsers()
   }
 
   async signIn(ctx: Context): Promise<void> {
     try {
       const body = ctx.request.body as IServiceAuthSignInRequest
 
-      if (!body || !body.email || !body.password) ctx.throw(400, 'Invalid payload')
+      if (!body || !body.email || !body.password) ctx.throw('Invalid payload')
+
+      const user = await this.serviceUsers.getByEmail(body.email)
+
+      if (!user) {
+        await this.serviceAuth.signUp({ email: body.email, password: body.password })
+        ctx.body = '@auth/user-signup'
+        ctx.status = 200
+        return
+      }
 
       ctx.body = await this.serviceAuth.signIn(body)
       ctx.status = 200
