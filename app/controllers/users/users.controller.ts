@@ -74,6 +74,20 @@ export class ControllerUsers {
     }
   }
 
+  async me(ctx: Context): Promise<void> {
+    try {
+      ctx.body = ctx.state.user
+      ctx.status = 200
+      return
+    } catch (err) {
+      ctx.body = {
+        error: '@root/me',
+        message: err.message
+      }
+      ctx.status = err.status || 500
+    }
+  }
+
   async post(ctx: Context): Promise<void> {
     const body = ctx.request.body as Partial<EntityUsers>
 
